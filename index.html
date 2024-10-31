@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Light the Diwali Diya</title>
+    <style>
+        body {
+            background: #2c1810;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            cursor: none;
+        }
+        #gameContainer {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(circle at center, #583726, #2c1810);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #diya {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .diya-body {
+            width: 160px;
+            height: 40px;
+            background: linear-gradient(45deg, #8b4513, #cd853f);
+            border-radius: 80px 80px 0 0;
+            position: relative;
+            transform: perspective(100px) rotateX(5deg);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .diya-inner {
+            width: 140px;
+            height: 35px;
+            background: linear-gradient(45deg, #654321, #8b4513);
+            border-radius: 70px 70px 0 0;
+            position: absolute;
+            top: 2px;
+            left: 10px;
+        }
+        .diya-base {
+            width: 180px;
+            height: 15px;
+            background: linear-gradient(45deg, #654321, #8b4513);
+            position: absolute;
+            bottom: -15px;
+            left: -10px;
+            border-radius: 0 0 50% 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .diya-oil {
+            width: 120px;
+            height: 10px;
+            background: rgba(255, 215, 0, 0.3);
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            border-radius: 60px 60px 0 0;
+        }
+        #wick {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 12px;
+            background: linear-gradient(to bottom, #000000, #333333);
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        #flame {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 30px;
+            background: radial-gradient(ellipse at center, #fff 1%, #ffa500 30%, #ff4500 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            display: none;
+            filter: blur(1px);
+            opacity: 0.9;
+        }
+        .flame-glow {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at center, rgba(255, 165, 0, 0.4), transparent 70%);
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            filter: blur(5px);
+            display: none;
+        }
+        #matchstick {
+            position: absolute;
+            width: 100px;
+            height: 6px;
+            background: linear-gradient(to right, #deb887, #8b4513);
+            cursor: none;
+            transform-origin: right center;
+            display: none;
+        }
+        #matchHead {
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(45deg, #ff4500, #8b0000);
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(255, 69, 0, 0.5);
+        }
+        #matchFlame {
+            position: absolute;
+            left: -15px;
+            top: -15px;
+            width: 16px;
+            height: 24px;
+            background: radial-gradient(ellipse at center, #fff 1%, #ffa500 30%, #ff4500 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            filter: blur(1px);
+            opacity: 1;
+            animation: matchFlicker 0.5s infinite alternate;
+        }
+        .match-glow {
+            position: absolute;
+            left: -20px;
+            top: -20px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at center, rgba(255, 165, 0, 0.4), transparent 70%);
+            border-radius: 50%;
+            filter: blur(3px);
+            opacity: 1;
+        }
+        #message {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffd700;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        .decorative-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at center, #ffd700 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        .flame-animation {
+            animation: flicker 0.5s infinite alternate;
+        }
+        @keyframes flicker {
+            0% { 
+                transform: translateX(-50%) scale(1);
+                opacity: 0.9;
+            }
+            100% { 
+                transform: translateX(-50%) scale(1.2);
+                opacity: 1;
+            }
+        }
+        @keyframes matchFlicker {
+            0% { 
+                transform: scale(1);
+                opacity: 0.9;
+            }
+            100% { 
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            animation: explode 1s ease-out forwards;
+            transform-origin: center center;
+        }
+        @keyframes explode {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(30);
+                opacity: 0;
+            }
+        }
+        .spark {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            animation: spark 1s ease-out forwards;
+        }
+        @keyframes spark {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div class="decorative-pattern"></div>
+        <div id="message">Happy Diwali to You! 🪔</div>
+        <div id="diya">
+            <div class="diya-body">
+                <div class="diya-inner">
+                    <div class="diya-oil"></div>
+                </div>
+                <div id="wick"></div>
+                <div class="flame-glow"></div>
+                <div id="flame"></div>
+            </div>
+            <div class="diya-base"></div>
+        </div>
+        <div id="matchstick">
+            <div id="matchHead"></div>
+            <div class="match-glow"></div>
+            <div id="matchFlame"></div>
+        </div>
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById('gameContainer');
+        const matchstick = document.getElementById('matchstick');
+        const flame = document.getElementById('flame');
+        const flameGlow = document.querySelector('.flame-glow');
+        const message = document.getElementById('message');
+        const wick = document.getElementById('wick');
+        let isLit = false;
+
+        function createFirework(x, y) {
+            const colors = ['#ff0', '#f0f', '#0ff', '#ff4500', '#ffd700'];
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = x + 'px';
+            firework.style.top = y + 'px';
+            firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            gameContainer.appendChild(firework);
+
+            // Create sparks
+            for (let i = 0; i < 20; i++) {
+                const spark = document.createElement('div');
+                spark.className = 'spark';
+                spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                const angle = (Math.PI * 2 * i) / 20;
+                const velocity = 50 + Math.random() * 50;
+                spark.style.setProperty('--tx', Math.cos(angle) * velocity + 'px');
+                spark.style.setProperty('--ty', Math.sin(angle) * velocity + 'px');
+                firework.appendChild(spark);
+            }
+
+            // Remove firework after animation
+            setTimeout(() => {
+                gameContainer.removeChild(firework);
+            }, 1000);
+        }
+
+        function lightDiya() {
+            isLit = true;
+            flame.style.display = 'block';
+            flameGlow.style.display = 'block';
+            flame.classList.add('flame-animation');
+            message.style.opacity = '1';
+            
+            // Add multiple small flames for a more festive effect
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const smallFlame = flame.cloneNode(true);
+                    const smallGlow = flameGlow.cloneNode(true);
+                    smallFlame.style.left = `${45 + i * 5}%`;
+                    smallGlow.style.left = `${45 + i * 5}%`;
+                    smallFlame.style.transform = 'translateX(-50%) scale(0.5)';
+                    smallGlow.style.transform = 'translateX(-50%) scale(0.5)';
+                    document.querySelector('.diya-inner').appendChild(smallFlame);
+                    document.querySelector('.diya-inner').appendChild(smallGlow);
+                }, i * 200);
+            }
+
+            // Add celebratory fireworks
+            const rect = gameContainer.getBoundingClientRect();
+            
+            // Launch multiple fireworks
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * rect.width;
+                    const y = Math.random() * (rect.height * 0.7); // Keep fireworks in upper 70% of screen
+                    createFirework(x, y);
+                }, i * 300);
+            }
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            const rect = gameContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            matchstick.style.display = 'block';
+            matchstick.style.left = (x - 90) + 'px';
+            matchstick.style.top = y + 'px';
+            
+            const angle = Math.atan2(y - matchstick.offsetTop, x - matchstick.offsetLeft);
+            matchstick.style.transform = `rotate(${angle}rad)`;
+
+            const wickRect = wick.getBoundingClientRect();
+            const matchHeadRect = document.getElementById('matchHead').getBoundingClientRect();
+            
+            const distance = Math.hypot(
+                wickRect.left - matchHeadRect.left,
+                wickRect.top - matchHeadRect.top
+            );
+
+            if (distance < 30 && !isLit) {
+                lightDiya();
+            }
+        });
+    </script>
+</body>
+</html>
